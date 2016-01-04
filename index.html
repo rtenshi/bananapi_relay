@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>rT Controller</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--link rel="stylesheet" href="./css/rtenshi.min.css" /-->
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" /> 
+  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script> 
+  <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> 
+</head>
+    <script type="text/javascript">
+        var ws = new WebSocket('ws://192.168.1.7:1234', 'echo-protocol');
+        
+        function sendMessage(){
+            var message = document.getElementById('message').value;
+            ws.send(message);
+        }
+        ws.addEventListener('message', function(e){
+           var msg = JSON.parse(e.data);
+            console.log(msg);
+            for(var i in msg) {
+                if (msg[i].status) {
+                    jQuery('.pin[name="'+msg[i].pin+'"]')[0].checked = true;
+                    jQuery('.pin[name="'+msg[i].pin+'"]').parent().addClass('ui-flipswitch-active');
+                } else {
+                    jQuery('.pin[name="'+msg[i].pin+'"]')[0].checked = false;
+                    jQuery('.pin[name="'+msg[i].pin+'"]').parent().removeClass('ui-flipswitch-active');
+                }
+            }
+        });
+    </script>
+    
+<body style="background-color:#3B3B3B" class="ui-mobile-viewport ui-overlay-b">
+    <header data-role="header" class="ui-bar ui-bar-b ui-corner-all" style="text-align: center;">
+        Home Automation
+    </header>
+    <main class="ui-body">        
+        <ul data-role="listview" style="">
+            <li>
+                <div class="ui-field-contain">
+                    <label for="flip-1">Switch 1:</label>
+                    <input class="pin" data-role="flipswitch" name="1" id="flip-1" type="checkbox">
+                </div>
+            </li>
+            <li>
+                <div class="ui-field-contain">
+                    <label for="flip-2">Switch 2:</label>
+                    <input class="pin" data-role="flipswitch" name="2" id="flip-2"  type="checkbox">
+                </div>
+            </li>
+            <li>
+                <div class="ui-field-contain">
+                    <label for="flip-3">Switch 3:</label>
+                    <input class="pin" data-role="flipswitch" name="3" id="flip-3"  type="checkbox">
+                </div>
+            </li>
+        </ul>
+    </main>
+    <footer data-role="footer">
+        
+    </footer>
+    <script>
+        jQuery(document).ready(function() {
+            jQuery('.pin').on('change', function(e) {
+                ws.send(JSON.stringify({mode:'pin',pin: parseInt(this.name), status: this.checked }));
+                
+            })
+        });
+     
+    </script>
+</body>    
+</html>

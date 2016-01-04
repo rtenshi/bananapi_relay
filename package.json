@@ -1,0 +1,14 @@
+{
+    "name"          :   "BananaPi NodeJS",
+    "version"       :   "1.0",
+    "description"   :   "Relay System for BananaPi / RaspberryPi",
+    "autor"         :   "rTenshi <info@rlima.de>",
+    "main"          :   "server.js",
+    "dependecies"   : {
+        "http"      :   "*",
+        "fs"        :   "*",
+        "websocket" :   "*",
+        "shelljs"   :   "*"
+    },
+    "license"       :   "MIT"
+}
